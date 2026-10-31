@@ -82,11 +82,14 @@ function DocumentCard(props: Props) {
     [pin]
   );
 
-  // Keep the drag sensor from claiming the pointer, otherwise holding the
-  // button for longer than the activation delay starts a drag
-  const handleActionsPointerDown = useCallback((ev: React.PointerEvent) => {
-    ev.stopPropagation();
-  }, []);
+  // Keep the drag sensors from claiming presses on the actions, otherwise a
+  // press on one of them can start dragging the card
+  const handleActionsPointerDown = useCallback(
+    (ev: React.PointerEvent | React.MouseEvent) => {
+      ev.stopPropagation();
+    },
+    []
+  );
 
   // If the document was updated within the last 7 days, show a timestamp instead of reading time
   const isRecentlyUpdated =
@@ -188,6 +191,7 @@ function DocumentCard(props: Props) {
                 dir={document.dir}
                 gap={4}
                 onPointerDown={handleActionsPointerDown}
+                onMouseDown={handleActionsPointerDown}
               >
                 <Tooltip content={t("Unpin")}>
                   <PinButton onClick={handleUnpin} aria-label={t("Unpin")}>
